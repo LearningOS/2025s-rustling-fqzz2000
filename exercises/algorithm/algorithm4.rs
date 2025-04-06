@@ -50,13 +50,22 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        if self.root.is_none() {
+            self.root = Some(Box::new(TreeNode::new(value)));
+        } else {
+            self.root.unwrap().as_mut().insert(value);
+        }
+
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        if self.root.is_none() {
+            false
+        } else {
+            self.root.unwrap().as_ref().search(value)
+        }
     }
 }
 
@@ -66,7 +75,41 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        // if value is less than the current node, insert it into the left subtree
+        // if value is greater than the current node, insert it into the right subtree
+        // if value is equal to the current node, do nothing
+        if value < self.value {
+            if self.left.is_none() {
+                self.left = Some(Box::new(TreeNode::new(value)));
+            } else {
+                self.left.as_mut().unwrap().insert(value);
+            }
+        } else if value > self.value {
+            if self.right.is_none() {
+                self.right = Some(Box::new(TreeNode::new(value)));
+            } else {
+                self.right.as_mut().unwrap().insert(value);
+            }
+        } else {
+            // do nothing
+        }
+    }
+    fn search(&self, value: T) -> bool {
+        if value == self.value {
+            true
+        } else if value < self.value {
+            if self.left.is_none() {
+                false
+            } else {
+                self.left.as_ref().unwrap().search(value)
+            }
+        } else {
+            if self.right.is_none() {
+                false
+            } else {
+                self.right.as_ref().unwrap().search(value)
+            }
+        }
     }
 }
 

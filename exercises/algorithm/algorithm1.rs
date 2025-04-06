@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +68,56 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self {
+        let mut b = list_b.start;
+        let mut a = list_a.start;
+        if b == None {
+            return list_a;
         }
-	}
+        if a == None {
+            return list_b;
+        }
+        unsafe {
+            let mut ret = Self::new();
+            while a != None && b != None {
+                let a_val = *(&a.unwrap().as_mut().val as *const _ as *const i32);
+                let b_val = *(&b.unwrap().as_mut().val as *const _ as *const i32);
+                if a_val < b_val {
+                    if ret.start == None {
+                        ret.start = a.clone();
+                        ret.end = a.clone();
+                    } else {
+                        ret.end.unwrap().as_mut().next = a.clone();
+                        ret.end = ret.end.unwrap().as_mut().next;
+                    }
+                    a = a.unwrap().as_mut().next;
+                } else {
+                    if ret.start == None {
+                        ret.start = b.clone();
+                        ret.end = b.clone();
+                    } else {
+                        ret.end.unwrap().as_mut().next = b.clone();
+                        ret.end = ret.end.unwrap().as_mut().next;
+                    }
+                    b = b.unwrap().as_mut().next;
+                }
+                ret.length += 1;
+            }
+            while a != None {
+                ret.end.unwrap().as_mut().next = a.clone();
+                ret.end = ret.end.unwrap().as_mut().next;
+                ret.length += 1;
+                a = a.unwrap().as_mut().next;
+            }
+            while b != None {
+                ret.end.unwrap().as_mut().next = b.clone();
+                ret.end = ret.end.unwrap().as_mut().next;
+                ret.length += 1;
+                b = b.unwrap().as_mut().next;
+            }
+            ret
+        }
+    }
 }
 
 impl<T> Display for LinkedList<T>

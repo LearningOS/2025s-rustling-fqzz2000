@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -53,7 +52,10 @@ where
         if self.root.is_none() {
             self.root = Some(Box::new(TreeNode::new(value)));
         } else {
-            self.root.unwrap().as_mut().insert(value);
+            match self.root.as_mut() {
+                Some(node) => node.insert(value),
+                None => panic!("Root should not be None after insertion"),
+            }
         }
 
     }
@@ -64,7 +66,10 @@ where
         if self.root.is_none() {
             false
         } else {
-            self.root.unwrap().as_ref().search(value)
+            match self.root.as_ref() {
+                Some(node) => node.search(value),
+                None => false,
+            }
         }
     }
 }
